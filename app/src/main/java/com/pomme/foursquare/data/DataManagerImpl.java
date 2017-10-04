@@ -11,7 +11,13 @@ import io.reactivex.Observable;
  * Created by pomme on 2017-10-03.
  */
 
-public class DataManagerImpl implements DataManager{
+public class DataManagerImpl implements DataManager {
+
+    FoursquareEndPoint foursquareEndPoint;
+
+    public DataManagerImpl(FoursquareEndPoint foursquareEndPoint) {
+        this.foursquareEndPoint = foursquareEndPoint;
+    }
 
     // Currently returning fake result
     @Override
