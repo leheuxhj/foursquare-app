@@ -3,7 +3,7 @@ package com.pomme.foursquare.injection;
 import android.app.Activity;
 
 import com.pomme.foursquare.injection.subcomponents.ListActivitySubComponent;
-import com.pomme.foursquare.ui.FoodListActivity;
+import com.pomme.foursquare.ui.foodlist.FoodListActivity;
 
 import dagger.Binds;
 import dagger.Module;

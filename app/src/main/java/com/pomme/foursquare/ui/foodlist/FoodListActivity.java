@@ -1,4 +1,4 @@
-package com.pomme.foursquare.ui;
+package com.pomme.foursquare.ui.foodlist;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +12,8 @@ import dagger.android.AndroidInjection;
 
 public class FoodListActivity extends AppCompatActivity {
 
-    @Inject ListActivityPresenter presenter;
+    @Inject
+    FoodListPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,6 @@ public class FoodListActivity extends AppCompatActivity {
         boolean injected = presenter == null ? false : true;
         TextView textView = (TextView) findViewById(R.id.text1);
         textView.setText("Dependency injection worked: " + String.valueOf(injected));
-
     }
+
 }
