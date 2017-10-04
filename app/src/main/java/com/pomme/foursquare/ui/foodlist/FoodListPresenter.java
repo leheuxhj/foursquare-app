@@ -19,6 +19,11 @@ public class FoodListPresenter implements FoodListContract.Presenter {
         this.dataManager = dataManager;
     }
 
+    @Override
+    public void fetchFoodList() {
+        dataManager.fetchFoodList();
+    }
+
     //Provide uiModels to the view as data is provided from Foursquare (or other service)
     @Override
     public Observable<FoodListUIModel> getUiModelObservable(){

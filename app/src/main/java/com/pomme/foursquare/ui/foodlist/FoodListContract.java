@@ -12,6 +12,7 @@ import io.reactivex.Observable;
 
 public interface FoodListContract {
     interface Presenter {
+        void fetchFoodList();
         Observable<FoodListUIModel> getUiModelObservable();
     }
 }

@@ -64,8 +64,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    DataManager provideDataManager(FoursquareEndPoint foursquareEndPoint){
-        return new DataManagerImpl(foursquareEndPoint);
+    DataManager provideDataManager(Context context, FoursquareEndPoint foursquareEndPoint){
+        return new DataManagerImpl(context, foursquareEndPoint);
     }
 
 }

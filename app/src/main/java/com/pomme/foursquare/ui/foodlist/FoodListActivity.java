@@ -1,6 +1,7 @@
 package com.pomme.foursquare.ui.foodlist;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -27,4 +28,9 @@ public class FoodListActivity extends AppCompatActivity {
         textView.setText("Dependency injection worked: " + String.valueOf(injected));
     }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        presenter.fetchFoodList();
+    }
 }

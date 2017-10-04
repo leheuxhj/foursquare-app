@@ -9,5 +9,6 @@ import io.reactivex.Observable;
 public interface DataManager {
 
     Observable<DataResult> dataResults();
+    void fetchFoodList();
 
 }
