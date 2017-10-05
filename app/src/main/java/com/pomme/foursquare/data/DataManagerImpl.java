@@ -26,13 +26,13 @@ public class DataManagerImpl implements DataManager {
     private FoursquareEndPoint foursquareEndPoint;
     private String clientId;
     private String clientSecret;
-    private static final String latlong = "45.533970,-73.620745"; // Koolicar co-ordinates
+    private static final String latlong = "45.533714,-73.620218"; // Koolicar co-ordinates
     private static final String whichApi = "foursquare"; // options are foursquare or swarm
     private static final String apiVersion = "20171003";
     private static final String limit = "10";
     private static final String categoryId = "4d4b7105d754a06374d81259"; // category Id for "food"
-    private static final String searchIntent = "browse"; // set intent to browse to ensure closest venues are returned
-    private static final String searchRadius = "250";
+    private static final String searchIntent = "browse"; // set intent to browse to get closest venues
+    private static final String searchRadius = "200";
 
 
     public DataManagerImpl(Context context, FoursquareEndPoint foursquareEndPoint) {

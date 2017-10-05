@@ -14,6 +14,7 @@ import io.reactivex.Observable;
  */
 
 public interface FoodListContract {
+
     interface Presenter {
         void setView(FoodListContract.View view);
         void uiEvent(UIEvent event);
