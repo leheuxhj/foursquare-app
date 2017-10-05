@@ -4,6 +4,7 @@ package com.pomme.foursquare.ui.foodlist;
  * Created by pomme on 2017-10-04.
  */
 
+import com.pomme.foursquare.models.FoodVenue;
 import com.pomme.foursquare.ui.UIEvent;
 
 import io.reactivex.Observable;
@@ -21,5 +22,6 @@ public interface FoodListContract {
 
     interface View {
         void subscribeToUIModel();
+        void openDetailActivity(FoodVenue venue);
     }
 }

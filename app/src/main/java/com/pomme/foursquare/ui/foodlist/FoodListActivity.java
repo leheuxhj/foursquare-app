@@ -1,5 +1,6 @@
 package com.pomme.foursquare.ui.foodlist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +8,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.pomme.foursquare.R;
+import com.pomme.foursquare.constants.FoursquareAppConstants;
+import com.pomme.foursquare.models.FoodVenue;
 import com.pomme.foursquare.ui.UIEvent;
+import com.pomme.foursquare.ui.details.DetailActivity;
 
 import javax.inject.Inject;
 
@@ -38,9 +42,11 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
         TextView textView = (TextView) findViewById(R.id.text1);
         textView.setText("Dependency injection worked: " + String.valueOf(injected));
 
-        // setup test button
+        // setup test buttons
         View button = findViewById(R.id.button);
         button.setOnClickListener((View v) -> presenter.uiEvent(UIEvent.newListRequest()));
+        View button2 = findViewById(R.id.button2);
+        button2.setOnClickListener((View v) -> presenter.uiEvent(UIEvent.openVenueInfo("Pavlova cafe")));
     }
 
     @Override
@@ -81,6 +87,13 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
     private void handleUiModelObserverOnComplete(){
         uiModelObserverHasOnComplete = true;
         compositeDisposable.remove(uiModelDisposable);
+    }
+
+    @Override
+    public void openDetailActivity(FoodVenue venue){
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(FoursquareAppConstants.FOOD_VENUE_PARCELABLE, venue);
+        startActivity(intent);
     }
 
 }

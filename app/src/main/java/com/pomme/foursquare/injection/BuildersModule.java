@@ -2,7 +2,9 @@ package com.pomme.foursquare.injection;
 
 import android.app.Activity;
 
+import com.pomme.foursquare.injection.subcomponents.DetailSubComponent;
 import com.pomme.foursquare.injection.subcomponents.ListActivitySubComponent;
+import com.pomme.foursquare.ui.details.DetailActivity;
 import com.pomme.foursquare.ui.foodlist.FoodListActivity;
 
 import dagger.Binds;
@@ -27,4 +29,10 @@ public abstract class BuildersModule {
     @ActivityKey(FoodListActivity.class)
     abstract AndroidInjector.Factory<? extends Activity>
     bindListActivityInjectorFactory(ListActivitySubComponent.Builder builder);
+
+    @Binds
+    @IntoMap
+    @ActivityKey(DetailActivity.class)
+    abstract AndroidInjector.Factory<? extends Activity>
+    bindDetailActivityInjectorFactory(DetailSubComponent.Builder builder);
 }

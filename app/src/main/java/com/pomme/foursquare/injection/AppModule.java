@@ -7,6 +7,7 @@ import com.pomme.foursquare.FoursquareApplication;
 import com.pomme.foursquare.data.DataManager;
 import com.pomme.foursquare.data.DataManagerImpl;
 import com.pomme.foursquare.data.FoursquareEndPoint;
+import com.pomme.foursquare.injection.subcomponents.DetailSubComponent;
 import com.pomme.foursquare.injection.subcomponents.ListActivitySubComponent;
 
 import javax.inject.Singleton;
@@ -26,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * It also references subcomponents.
  */
 
-@Module(subcomponents = ListActivitySubComponent.class)
+@Module(subcomponents = {ListActivitySubComponent.class, DetailSubComponent.class})
 public class AppModule {
 
     private static final String FOURSQUARE_URL = "https://api.foursquare.com";

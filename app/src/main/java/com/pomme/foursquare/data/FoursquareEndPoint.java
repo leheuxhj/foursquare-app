@@ -19,6 +19,7 @@ public interface FoursquareEndPoint {
     String LIMIT = "limit"; // number of venues to return
     String SECTION = "categoryId"; // type of venue to return https://developer.foursquare.com/docs/resources/categories
     String INTENT = "intent";
+    String RADIUS = "radius";
 
     @GET("/v2/venues/search")
     Call<FoursquareSearchResponse> fetchFoodSearchResultsForLocation(@Query("ll") String latLong,
@@ -28,7 +29,8 @@ public interface FoursquareEndPoint {
                                                                      @Query(API_VERSION) String apiVersion,
                                                                      @Query(LIMIT) String limit,
                                                                      @Query(SECTION) String section,
-                                                                     @Query(INTENT) String searchIntent
+                                                                     @Query(INTENT) String searchIntent,
+                                                                     @Query(RADIUS) String searchRadius
     );
 
 }

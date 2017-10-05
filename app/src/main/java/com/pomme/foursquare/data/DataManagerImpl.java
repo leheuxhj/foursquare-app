@@ -31,7 +31,8 @@ public class DataManagerImpl implements DataManager {
     private static final String apiVersion = "20171003";
     private static final String limit = "10";
     private static final String categoryId = "4d4b7105d754a06374d81259"; // category Id for "food"
-    private static final String searchIntent = "checkin"; // set intent to checkin to ensure closest venues are returned
+    private static final String searchIntent = "browse"; // set intent to browse to ensure closest venues are returned
+    private static final String searchRadius = "250";
 
 
     public DataManagerImpl(Context context, FoursquareEndPoint foursquareEndPoint) {
@@ -57,7 +58,7 @@ public class DataManagerImpl implements DataManager {
     private void fetchFoodSearchFromFoursquare() {
         foursquareEndPoint
                 .fetchFoodSearchResultsForLocation(latlong, clientId, clientSecret, whichApi,
-                        apiVersion, limit, categoryId, searchIntent)
+                        apiVersion, limit, categoryId, searchIntent, searchRadius)
                 .enqueue(new Callback<FoursquareSearchResponse>() {
                     @Override
                     public void onResponse(Call<FoursquareSearchResponse> call, Response<FoursquareSearchResponse> response) {
@@ -92,7 +93,7 @@ public class DataManagerImpl implements DataManager {
             List<FoodVenue> foodVenueList = new ArrayList<>();
             for (Venue venue : venueList) {
                 if (venue.name != null && !venue.name.isEmpty()) {
-                    FoodVenue foodVenue = new FoodVenue(venue.name);
+                    FoodVenue foodVenue = new FoodVenue(venue.name, null, null);
                     foodVenueList.add(foodVenue);
                 }
             }
