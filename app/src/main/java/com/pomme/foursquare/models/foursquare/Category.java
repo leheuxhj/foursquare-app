@@ -1,16 +1,16 @@
 package com.pomme.foursquare.models.foursquare;
 
 /**
- * Created by pomme on 2017-10-04.
+ * Created by pomme on 2017-10-05.
  */
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Contact {
+public class Category {
 
-    @SerializedName("formattedPhone")
+    @SerializedName("name")
     @Expose
-    public String formattedPhone;
+    public String name;
 
 }

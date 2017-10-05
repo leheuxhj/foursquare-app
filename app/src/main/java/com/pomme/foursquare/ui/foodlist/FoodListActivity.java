@@ -167,9 +167,20 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 String venueName = (String) parent.getAdapter().getItem(position);
-                presenter.uiEvent(UIEvent.openVenueInfo(venueName));
+                FoodVenue venue = getFoodVenueFromList(venueName);
+                if (venue != null) presenter.uiEvent(UIEvent.openVenueInfo(venue));
             }
         });
+    }
+
+    private FoodVenue getFoodVenueFromList(String venueName){
+        FoodVenue foodVenue = null;
+        if (venueName != null){
+            for (FoodVenue venue : venues){
+                if (venueName.equals(venue.venueName)) foodVenue = venue;
+            }
+        }
+        return foodVenue;
     }
 
     private ArrayList<String> getListVenueNames(List<FoodVenue> foodVenues){

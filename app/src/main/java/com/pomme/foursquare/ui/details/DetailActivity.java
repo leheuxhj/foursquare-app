@@ -11,6 +11,8 @@ import com.pomme.foursquare.models.FoodVenue;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 
 /**
@@ -22,6 +24,13 @@ public class DetailActivity extends AppCompatActivity {
     @Inject
     DetailPresenter presenter;
 
+    @BindView(R.id.detailVenueName)
+    TextView venueNameTextView;
+    @BindView(R.id.detailVenueAddress)
+    TextView venueAddressTextView;
+    @BindView(R.id.detailVenueCategory)
+    TextView venueCategoryTextView;
+
     private FoodVenue venue;
 
     @Override
@@ -29,20 +38,27 @@ public class DetailActivity extends AppCompatActivity {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        ButterKnife.bind(this);
 
-        // dependency injection test
-        boolean injected = presenter == null ? false : true;
-        TextView textView = (TextView) findViewById(R.id.textViewDetail);
-        textView.setText("Dependency injection worked: " + String.valueOf(injected));
-
-        //venue info test
+        //get venue info from parcelable
         try {
             venue = getIntent().getParcelableExtra(FoursquareAppConstants.FOOD_VENUE_PARCELABLE);
         } catch (ClassCastException e){
             e.getLocalizedMessage();
         }
-        TextView textView2 = (TextView) findViewById(R.id.textView2);
-        if (venue != null && venue.venueName != null) textView2.setText(venue.venueName);
+
+        if (venue != null) bindVenueDetailsToView(venue);
+        else displayErrorMessage();
+    }
+
+    private void displayErrorMessage(){
 
     }
+
+    private void bindVenueDetailsToView(FoodVenue venue){
+        if (venue.venueName != null) venueNameTextView.setText(venue.venueName);
+        if (venue.address != null) venueAddressTextView.setText(venue.address);
+        if (venue.category != null) venueCategoryTextView.setText(venue.category);
+    }
+
 }
