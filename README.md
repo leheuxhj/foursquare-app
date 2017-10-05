@@ -1,4 +1,4 @@
-## FOOD NEAR KOOLICAR APP
+## FOOD NEAR KOOLICAR
 
 This android application accesses the Foursquare api and returns 10 food venues close to
 the Koolicar Montreal office. Further information about a venue can be found by
@@ -16,4 +16,6 @@ and add to string resources with the ids "foursquareClientSecret" and "foursquar
 
 
 This application makes use of RXJava2, [Dagger2-Android](https://google.github.io/dagger/android.html),
-Butterknife and Retrofit.
+Butterknife and Retrofit. See [project dependency injection diagram](dependencyInjectionDiagram.png) to see how dependency injection is set-up.
+
+Unidirectional data flow principles were incorporated into this app to help with state management of objects. See [unidirectional data flow diagram in project repository](unidirectionalDataFlow.png).
