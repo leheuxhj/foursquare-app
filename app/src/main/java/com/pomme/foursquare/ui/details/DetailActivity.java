@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.BindViews;
+
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 
