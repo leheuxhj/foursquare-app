@@ -38,8 +38,8 @@ public class DataManagerImpl implements DataManager {
 
     public DataManagerImpl(Context context, FoursquareEndPoint foursquareEndPoint) {
         this.foursquareEndPoint = foursquareEndPoint;
-        clientId = context.getString(R.string.foursquare_client_id);
-        clientSecret = context.getString(R.string.foursquare_client_secret);
+        clientId = context.getString(R.string.foursquareClientId);
+        clientSecret = context.getString(R.string.foursquareClientSecret);
     }
 
     // ---- ACTIONS ----
