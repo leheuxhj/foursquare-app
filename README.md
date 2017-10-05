@@ -7,7 +7,7 @@ clicking on it.
 To compile this project:
 
 - Obtain a client id and client secret from [Foursquare](https://developer-test.foursquare.com/docs)
-and add to string resources with the ids "foursquareClientSecret" and "foursquareClientSecret"
+and add to string resources with the ids "foursquareClientId" and "foursquareClientSecret"
 - Obtain an api key and secret from [Fabric](https://docs.fabric.io/android/fabric/settings/api-keys.html). Add a fabric.properties file in your app directory with
 
  - apiKey = {yourApiKey}
