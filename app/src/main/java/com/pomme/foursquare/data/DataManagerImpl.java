@@ -92,13 +92,35 @@ public class DataManagerImpl implements DataManager {
             List<Venue> venueList = response.response.venues;
             List<FoodVenue> foodVenueList = new ArrayList<>();
             for (Venue venue : venueList) {
-                if (venue.name != null && !venue.name.isEmpty()) {
-                    FoodVenue foodVenue = new FoodVenue(venue.name, null, null);
-                    foodVenueList.add(foodVenue);
-                }
+                FoodVenue foodVenue = convertFoursquareVenueToFoodVenue(venue);
+                foodVenueList.add(foodVenue);
             }
             return DataResult.success(foodVenueList);
         } else return null;
+    }
+
+    private FoodVenue convertFoursquareVenueToFoodVenue(Venue venue){
+        FoodVenue foodVenue = null;
+        if (venue.name != null && !venue.name.isEmpty()) {
+            // Name
+            String venueName = venue.name;
+            // Location
+            String venueLocation = null;
+            if (venue.location != null && venue.location.address != null
+                    && !venue.location.address.isEmpty()) {
+                venueLocation = venue.location.address;
+            }
+            // Category
+            String venueCategory = null;
+            if (venue.categories != null
+                    && !venue.categories.isEmpty()
+                    && venue.categories.get(0) != null
+                    && venue.categories.get(0).name != null) {
+                venueCategory = venue.categories.get(0).name;
+            }
+            foodVenue = new FoodVenue(venueName, venueLocation, venueCategory);
+        }
+        return foodVenue;
     }
 
     private void onFoursquareError(int errorCode){

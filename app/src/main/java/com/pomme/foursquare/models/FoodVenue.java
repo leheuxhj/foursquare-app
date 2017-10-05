@@ -10,18 +10,18 @@ public class FoodVenue implements Parcelable {
 
     public final String venueName;
     public final String address;
-    public final String phoneNumber;
+    public final String category;
 
-    public FoodVenue(String venueName, String address, String phoneNumber){
+    public FoodVenue(String venueName, String address, String category){
         this.venueName = venueName;
         this.address = address;
-        this.phoneNumber = phoneNumber;
+        this.category = category;
     }
 
     protected FoodVenue(Parcel in) {
         venueName = in.readString();
         address = in.readString();
-        phoneNumber = in.readString();
+        category = in.readString();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class FoodVenue implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(venueName);
         dest.writeString(address);
-        dest.writeString(phoneNumber);
+        dest.writeString(category);
     }
 
     @SuppressWarnings("unused")

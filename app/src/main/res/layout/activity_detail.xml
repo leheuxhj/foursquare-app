@@ -2,16 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
 
     <TextView
-        android:id="@+id/textViewDetail"
+        android:id="@+id/detailVenueName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        style="@style/TextAppearance.AppCompat.Large"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/detailVenueCategory"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        style="@style/TextAppearance.AppCompat.Medium"/>
+
+    <TextView
+        android:id="@+id/detailVenueAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        style="@style/TextAppearance.AppCompat.Medium"/>
 
 </LinearLayout>

@@ -45,8 +45,8 @@ public class FoodListPresenterTest {
 
         failResult = DataResult.failure(errorMsg);
 
-        FoodVenue venue1 = new FoodVenue("venue1");
-        FoodVenue venue2 = new FoodVenue("venue2");
+        FoodVenue venue1 = new FoodVenue("venue1", "soup", "3 J st");
+        FoodVenue venue2 = new FoodVenue("venue2", "fries", "4 K st");
         List<FoodVenue> venues = new ArrayList<>();
         venues.add(venue1);
         venues.add(venue2);

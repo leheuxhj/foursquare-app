@@ -2,7 +2,6 @@ package com.pomme.foursquare.ui.foodlist;
 
 import com.pomme.foursquare.data.DataManager;
 import com.pomme.foursquare.data.DataResult;
-import com.pomme.foursquare.models.FoodVenue;
 import com.pomme.foursquare.ui.UIEvent;
 
 import java.lang.ref.WeakReference;
@@ -42,10 +41,7 @@ public class FoodListPresenter implements FoodListContract.Presenter {
     }
 
     private void fetchVenueInfo(UIEvent uiEvent){
-        if (uiEvent.venueId != null){
-            FoodVenue venue = new FoodVenue(uiEvent.venueId, null, null);
-            view.get().openDetailActivity(venue);
-        }
+        if (uiEvent.foodVenue != null) view.get().openDetailActivity(uiEvent.foodVenue);
     }
 
     //Provide uiModels to the view as data is provided from Foursquare (or other service)
