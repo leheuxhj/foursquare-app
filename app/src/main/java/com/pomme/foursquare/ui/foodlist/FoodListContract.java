@@ -19,6 +19,7 @@ public interface FoodListContract {
         void setView(FoodListContract.View view);
         void uiEvent(UIEvent event);
         Observable<FoodListUIModel> getUiModelObservable();
+        void onError(Throwable error);
     }
 
     interface View {

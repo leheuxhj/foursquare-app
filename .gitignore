@@ -1,5 +1,6 @@
-# Ignored strings file
+# Ignored files (api keys)
 app/src/main/res/values/ignored_strings.xml
+fabric.properties
 
 # Built application files
 *.apk

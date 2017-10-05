@@ -26,4 +26,12 @@
         android:layout_margin="5dp"
         style="@style/TextAppearance.AppCompat.Medium"/>
 
+    <TextView
+        android:id="@+id/detailErrorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Unable to fetch information"
+        android:visibility="gone" />
+
 </LinearLayout>

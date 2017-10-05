@@ -3,6 +3,7 @@ package com.pomme.foursquare.data;
 import android.content.Context;
 
 import com.pomme.foursquare.R;
+import com.pomme.foursquare.errorreport.ErrorReporting;
 import com.pomme.foursquare.models.FoodVenue;
 import com.pomme.foursquare.models.foursquare.FoursquareSearchResponse;
 import com.pomme.foursquare.models.foursquare.Venue;
@@ -21,7 +22,7 @@ import retrofit2.Response;
 
 public class DataManagerImpl implements DataManager {
 
-    PublishSubject<DataResult> publishSubject = PublishSubject.create(); // todo send DataResult to presenter
+    private PublishSubject<DataResult> publishSubject = PublishSubject.create();
 
     private FoursquareEndPoint foursquareEndPoint;
     private String clientId;
@@ -41,18 +42,11 @@ public class DataManagerImpl implements DataManager {
         clientSecret = context.getString(R.string.foursquare_client_secret);
     }
 
+    // ---- ACTIONS ----
+
     @Override
     public void fetchFoodList() {
         fetchFoodSearchFromFoursquare();
-    }
-
-    // Observers (such as in the FoodListPresenter) can get DataResults by subscribing via this method
-    @Override
-    public PublishSubject<DataResult> dataResultsObservable() {
-        if (publishSubject.hasComplete()){
-            publishSubject = PublishSubject.create();
-        }
-        return publishSubject;
     }
 
     private void fetchFoodSearchFromFoursquare() {
@@ -77,6 +71,17 @@ public class DataManagerImpl implements DataManager {
                         onNetworkFailure(t);
                     }
                 });
+    }
+
+    // ---- DATA RESULTS ----
+
+    // Observers (such as in the FoodListPresenter) can get DataResults by subscribing via this method
+    @Override
+    public PublishSubject<DataResult> dataResultsObservable() {
+        if (publishSubject.hasComplete()){
+            publishSubject = PublishSubject.create();
+        }
+        return publishSubject;
     }
 
     private void onSuccessfulSearchResponse(FoursquareSearchResponse response){
@@ -123,16 +128,31 @@ public class DataManagerImpl implements DataManager {
         return foodVenue;
     }
 
+    // ---- ERROR HANDLING ----
+
     private void onFoursquareError(int errorCode){
-        // todo : notify ui of error
+        ErrorReporting.sendErrorMessageToFabric(
+                ErrorReporting.ErrorType.FOURSQUARE_ERROR, String.valueOf(errorCode));
+        sendDataResultError(String.valueOf(errorCode));
     }
 
     private void onNetworkFailure(Throwable throwable){
-        // todo : notify ui of error
+        ErrorReporting.sendErrorMessageToFabric(
+                ErrorReporting.ErrorType.NETWORK_FAILURE, throwable.getMessage());
+        sendDataResultError(throwable.getMessage());
     }
 
     private void onException(Exception e){
-        // todo : notify ui of error
+        ErrorReporting.sendErrorMessageToFabric(
+                ErrorReporting.ErrorType.EXCEPTION, e.getMessage());
+        sendDataResultError(e.getMessage());
+    }
+
+    private void sendDataResultError(String errorMessage){
+        if (!publishSubject.hasComplete()){
+            DataResult result = DataResult.failure(errorMessage);
+            publishSubject.onNext(result);
+        }
     }
 
 }

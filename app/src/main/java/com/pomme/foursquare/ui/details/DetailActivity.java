@@ -3,15 +3,19 @@ package com.pomme.foursquare.ui.details;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.pomme.foursquare.R;
 import com.pomme.foursquare.constants.FoursquareAppConstants;
 import com.pomme.foursquare.models.FoodVenue;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 
@@ -19,7 +23,7 @@ import dagger.android.AndroidInjection;
  * Created by pomme on 2017-10-04.
  */
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements DetailContract.View {
 
     @Inject
     DetailPresenter presenter;
@@ -30,6 +34,18 @@ public class DetailActivity extends AppCompatActivity {
     TextView venueAddressTextView;
     @BindView(R.id.detailVenueCategory)
     TextView venueCategoryTextView;
+    @BindView(R.id.detailErrorMessage)
+    TextView errorMessageTextView;
+
+    @BindViews({R.id.detailVenueName, R.id.detailVenueAddress, R.id.detailVenueCategory})
+    List<View> detailInfoViews;
+
+    static final ButterKnife.Setter<View, Integer> VISIBLE = new ButterKnife.Setter<View, Integer>() {
+        @Override
+        public void set(View view, Integer value, int index) {
+            view.setVisibility(value);
+        }
+    };
 
     private FoodVenue venue;
 
@@ -47,15 +63,20 @@ public class DetailActivity extends AppCompatActivity {
             e.getLocalizedMessage();
         }
 
+        // display venue or error
         if (venue != null) bindVenueDetailsToView(venue);
-        else displayErrorMessage();
+        else presenter.onError(venue);
     }
 
-    private void displayErrorMessage(){
-
+    @Override
+    public void displayErrorMessage() {
+        ButterKnife.apply(detailInfoViews, VISIBLE, View.GONE);
+        errorMessageTextView.setVisibility(View.VISIBLE);
     }
 
     private void bindVenueDetailsToView(FoodVenue venue){
+        ButterKnife.apply(detailInfoViews, VISIBLE, View.VISIBLE);
+        errorMessageTextView.setVisibility(View.GONE);
         if (venue.venueName != null) venueNameTextView.setText(venue.venueName);
         if (venue.address != null) venueAddressTextView.setText(venue.address);
         if (venue.category != null) venueCategoryTextView.setText(venue.category);

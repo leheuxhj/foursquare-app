@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.pomme.foursquare.R;
 import com.pomme.foursquare.constants.FoursquareAppConstants;
@@ -38,6 +39,8 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
     ListViewCompat venueListView;
     @BindView(R.id.venueListProgressBar)
     ProgressBar progressBar;
+    @BindView(R.id.listErrorMessage)
+    TextView errorMsgTextView;
 
     private CompositeDisposable compositeDisposable;
     private Disposable uiModelDisposable;
@@ -48,6 +51,8 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
     private final static String VENUE_LIST = "foodListActivity_venueList";
     private final static String VENUE_NAMES_LIST = "foodListActivity_venueNamesList";
     ArrayAdapter<String> adapter;
+
+    // ---- ACTIVITY LIFECYCLE EVENTS ----
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +97,8 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
         super.onDestroy();
     }
 
+    // ---- DISPLAY/UIMODEL ----
+
     @Override
     public void subscribeToUIModel(){
         if (compositeDisposable == null) compositeDisposable = new CompositeDisposable();
@@ -117,6 +124,7 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
         if (uiModel.foodVenues != null && !uiModel.foodVenues.isEmpty()){
             venueListView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
+            errorMsgTextView.setVisibility(View.GONE);
 
             if (venues != null) venues.clear();
             else venues = new ArrayList<>();
@@ -129,26 +137,39 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
     private void updateUIForInProgress(FoodListUIModel uiModel){
         venueListView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
+        errorMsgTextView.setVisibility(View.GONE);
     }
 
     private void updateUIForError(FoodListUIModel uiModel){
-
+        if (venueNames != null){
+            venueListView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            errorMsgTextView.setVisibility(View.GONE);
+            setUpListView();
+        } else {
+            venueListView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+            errorMsgTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void handleError(Throwable error){
-        System.out.print(error.getMessage());
+        if (venueNames != null && !venueNames.isEmpty()){
+            venueListView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            errorMsgTextView.setVisibility(View.GONE);
+            setUpListView();
+        } else {
+            venueListView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+            errorMsgTextView.setVisibility(View.VISIBLE);
+        }
+        presenter.onError(error);
     }
 
     private void handleUiModelObserverOnComplete(){
         uiModelObserverHasOnComplete = true;
         compositeDisposable.remove(uiModelDisposable);
-    }
-
-    @Override
-    public void openDetailActivity(FoodVenue venue){
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(FoursquareAppConstants.FOOD_VENUE_PARCELABLE, venue);
-        startActivity(intent);
     }
 
     private void setUpListView(){
@@ -173,6 +194,8 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
         });
     }
 
+    // ---- VENUE LIST ----
+
     private FoodVenue getFoodVenueFromList(String venueName){
         FoodVenue foodVenue = null;
         if (venueName != null){
@@ -189,6 +212,14 @@ public class FoodListActivity extends AppCompatActivity implements FoodListContr
             if (venue.venueName != null && !venue.venueName.isEmpty()) venueNamesList.add(venue.venueName);
         }
         return venueNamesList;
+    }
+
+    // ---- NAVIGATION BETWEEN OTHER ACTIVITIES ----
+    @Override
+    public void openDetailActivity(FoodVenue venue){
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(FoursquareAppConstants.FOOD_VENUE_PARCELABLE, venue);
+        startActivity(intent);
     }
 
 }

@@ -2,6 +2,7 @@ package com.pomme.foursquare.ui.foodlist;
 
 import com.pomme.foursquare.data.DataManager;
 import com.pomme.foursquare.data.DataResult;
+import com.pomme.foursquare.errorreport.ErrorReporting;
 import com.pomme.foursquare.ui.UIEvent;
 
 import java.lang.ref.WeakReference;
@@ -28,6 +29,8 @@ public class FoodListPresenter implements FoodListContract.Presenter {
         this.view = new WeakReference<>(view);
     }
 
+    // ---- UI EVENTS -> ACTIONS ----
+
     @Override
     public void uiEvent(UIEvent uiEvent) {
         view.get().subscribeToUIModel();
@@ -43,6 +46,8 @@ public class FoodListPresenter implements FoodListContract.Presenter {
     private void fetchVenueInfo(UIEvent uiEvent){
         if (uiEvent.foodVenue != null) view.get().openDetailActivity(uiEvent.foodVenue);
     }
+
+    // ---- DATA RESULT -> UIMODEL ----
 
     //Provide uiModels to the view as data is provided from Foursquare (or other service)
     @Override
@@ -66,6 +71,14 @@ public class FoodListPresenter implements FoodListContract.Presenter {
             }
             throw new IllegalArgumentException();
         });
+    }
+
+    // ---- ERROR HANDLING ----
+
+    @Override
+    public void onError(Throwable error) {
+        ErrorReporting.sendErrorMessageToFabric(
+                ErrorReporting.ErrorType.THROWABLE, String.valueOf(error.getMessage()));
     }
 
 }
