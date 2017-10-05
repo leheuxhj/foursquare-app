@@ -5,11 +5,12 @@ import android.content.Context;
 import com.pomme.foursquare.R;
 import com.pomme.foursquare.models.FoodVenue;
 import com.pomme.foursquare.models.foursquare.FoursquareSearchResponse;
+import com.pomme.foursquare.models.foursquare.Venue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,6 +21,8 @@ import retrofit2.Response;
 
 public class DataManagerImpl implements DataManager {
 
+    PublishSubject<DataResult> publishSubject = PublishSubject.create(); // todo send DataResult to presenter
+
     private FoursquareEndPoint foursquareEndPoint;
     private String clientId;
     private String clientSecret;
@@ -29,6 +32,7 @@ public class DataManagerImpl implements DataManager {
     private static final String limit = "10";
     private static final String categoryId = "4d4b7105d754a06374d81259"; // category Id for "food"
     private static final String searchIntent = "checkin"; // set intent to checkin to ensure closest venues are returned
+
 
     public DataManagerImpl(Context context, FoursquareEndPoint foursquareEndPoint) {
         this.foursquareEndPoint = foursquareEndPoint;
@@ -41,22 +45,16 @@ public class DataManagerImpl implements DataManager {
         fetchFoodSearchFromFoursquare();
     }
 
-    // Currently returning fake result
+    // Observers (such as in the FoodListPresenter) can get DataResults by subscribing via this method
     @Override
-    public Observable<DataResult> dataResults() {
-        FoodVenue venue1 = new FoodVenue("venue1");
-        FoodVenue venue2 = new FoodVenue("venue2");
-        FoodVenue venue3 = new FoodVenue("venue3");
-        List<FoodVenue> venues = new ArrayList<>();
-        venues.add(venue1);
-        venues.add(venue2);
-        venues.add(venue3);
-
-        DataResult result = DataResult.success(venues);
-        return Observable.just(result);
+    public PublishSubject<DataResult> dataResultsObservable() {
+        if (publishSubject.hasComplete()){
+            publishSubject = PublishSubject.create();
+        }
+        return publishSubject;
     }
 
-    public void fetchFoodSearchFromFoursquare() {
+    private void fetchFoodSearchFromFoursquare() {
         foursquareEndPoint
                 .fetchFoodSearchResultsForLocation(latlong, clientId, clientSecret, whichApi,
                         apiVersion, limit, categoryId, searchIntent)
@@ -81,7 +79,25 @@ public class DataManagerImpl implements DataManager {
     }
 
     private void onSuccessfulSearchResponse(FoursquareSearchResponse response){
-        // todo : convert to DataResult and send to views presenter
+        if (!publishSubject.hasComplete()){
+            DataResult result = convertFoursquareSearchResponse(response);
+            if (result != null) publishSubject.onNext(result);
+        }
+    }
+
+    // Turning foursquare response into a format that the presenter can use (DataResult)
+    private DataResult convertFoursquareSearchResponse(FoursquareSearchResponse response){
+        if (response != null && response.response != null && response.response.venues != null) {
+            List<Venue> venueList = response.response.venues;
+            List<FoodVenue> foodVenueList = new ArrayList<>();
+            for (Venue venue : venueList) {
+                if (venue.name != null && !venue.name.isEmpty()) {
+                    FoodVenue foodVenue = new FoodVenue(venue.name);
+                    foodVenueList.add(foodVenue);
+                }
+            }
+            return DataResult.success(foodVenueList);
+        } else return null;
     }
 
     private void onFoursquareError(int errorCode){

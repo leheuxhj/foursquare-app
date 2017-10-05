@@ -4,6 +4,8 @@ package com.pomme.foursquare.ui.foodlist;
  * Created by pomme on 2017-10-04.
  */
 
+import com.pomme.foursquare.ui.UIEvent;
+
 import io.reactivex.Observable;
 
 /**
@@ -12,7 +14,12 @@ import io.reactivex.Observable;
 
 public interface FoodListContract {
     interface Presenter {
-        void fetchFoodList();
+        void setView(FoodListContract.View view);
+        void uiEvent(UIEvent event);
         Observable<FoodListUIModel> getUiModelObservable();
+    }
+
+    interface View {
+        void subscribeToUIModel();
     }
 }

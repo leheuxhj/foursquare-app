@@ -1,6 +1,6 @@
 package com.pomme.foursquare.data;
 
-import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by pomme on 2017-10-03.
@@ -8,7 +8,7 @@ import io.reactivex.Observable;
 
 public interface DataManager {
 
-    Observable<DataResult> dataResults();
+    PublishSubject<DataResult> dataResultsObservable();
     void fetchFoodList();
 
 }

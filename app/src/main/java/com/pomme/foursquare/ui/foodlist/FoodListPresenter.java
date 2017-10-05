@@ -2,6 +2,9 @@ package com.pomme.foursquare.ui.foodlist;
 
 import com.pomme.foursquare.data.DataManager;
 import com.pomme.foursquare.data.DataResult;
+import com.pomme.foursquare.ui.UIEvent;
+
+import java.lang.ref.WeakReference;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
@@ -12,16 +15,33 @@ import io.reactivex.ObservableTransformer;
 
 public class FoodListPresenter implements FoodListContract.Presenter {
 
+    private WeakReference<FoodListContract.View> view;
     private DataManager dataManager;
-    private FoodListUIModel initialState = FoodListUIModel.idle();
+    private FoodListUIModel initialState = FoodListUIModel.inProgress();
 
     public FoodListPresenter(DataManager dataManager){
         this.dataManager = dataManager;
     }
 
     @Override
-    public void fetchFoodList() {
+    public void setView(FoodListContract.View view) {
+        this.view = new WeakReference<>(view);
+    }
+
+    @Override
+    public void uiEvent(UIEvent uiEvent) {
+        view.get().subscribeToUIModel();
+        UIEvent.UIEventType uiEventType = uiEvent.uiEventType;
+        if (uiEventType == UIEvent.UIEventType.NEW_LIST_REQUEST) fetchFoodList(uiEvent);
+        else if (uiEventType == UIEvent.UIEventType.OPEN_VENUE_INFO) fetchVenueInfo(uiEvent);
+    }
+
+    private void fetchFoodList(UIEvent uiEvent){
         dataManager.fetchFoodList();
+    }
+
+    private void fetchVenueInfo(UIEvent uiEvent){
+        //todo : fetch venue info
     }
 
     //Provide uiModels to the view as data is provided from Foursquare (or other service)
@@ -33,7 +53,7 @@ public class FoodListPresenter implements FoodListContract.Presenter {
 
     // provides data from Foursquare (or other service)
     private Observable<DataResult> resultObservable(){
-        return dataManager.dataResults();
+        return dataManager.dataResultsObservable();
     }
 
     // Take results from Foursquare (or other service) and get a uiModel for updating view

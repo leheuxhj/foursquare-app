@@ -18,8 +18,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
+import io.reactivex.subjects.PublishSubject;
 
 import static org.mockito.Mockito.when;
 
@@ -59,18 +59,20 @@ public class FoodListPresenterTest {
     public void errorReturnedFromVenueSearch(){
         // given:
         TestObserver<FoodListUIModel> observer = new TestObserver<>();
-        Observable<DataResult> dataResultObservable = Observable.just(failResult);
-        when(dataManager.dataResults()).thenReturn(dataResultObservable);
+        PublishSubject<DataResult> dataResultPublishSubject = PublishSubject.create();
+        when(dataManager.dataResultsObservable()).thenReturn(dataResultPublishSubject);
         List<FoodListUIModel> modelList = new ArrayList<>();
 
         // when:
         foodListPresenter.getUiModelObservable().subscribe(observer);
+        dataResultPublishSubject.onNext(failResult);
+        dataResultPublishSubject.onComplete();
 
         // then:
         observer.assertNoErrors();
-        //Check first value is FoodListUIModel.idle
+        //Check first value is FoodListUIModel.inProgress
         observer.assertValueAt(0, value ->
-                !value.inProgress && !value.success && value.errorMessage == null && value.foodVenues == null);
+                value.inProgress && !value.success && value.errorMessage == null && value.foodVenues == null);
         //Check second value is FoodListUIModel.failure
         observer.assertValueAt(1, value ->
                 !value.inProgress && !value.success && !value.errorMessage.isEmpty() && value.foodVenues == null);
@@ -80,17 +82,19 @@ public class FoodListPresenterTest {
     public void resultsReturnedFromSuccessfulVenueSearch() {
         // given:
         TestObserver<FoodListUIModel> observer = new TestObserver<>();
-        Observable<DataResult> dataResultObservable = Observable.just(successResult);
-        when(dataManager.dataResults()).thenReturn(dataResultObservable);
+        PublishSubject<DataResult> dataResultPublishSubject = PublishSubject.create();
+        when(dataManager.dataResultsObservable()).thenReturn(dataResultPublishSubject);
 
         // when:
         foodListPresenter.getUiModelObservable().subscribe(observer);
+        dataResultPublishSubject.onNext(successResult);
+        dataResultPublishSubject.onComplete();
 
         // then:
         observer.assertNoErrors();
-        //Check first value is FoodListUIModel.idle
+        //Check first value is FoodListUIModel.inProgress
         observer.assertValueAt(0, value ->
-                !value.inProgress && !value.success && value.errorMessage == null && value.foodVenues == null);
+                value.inProgress && !value.success && value.errorMessage == null && value.foodVenues == null);
         //Check second value is FoodListUIModel.success
         observer.assertValueAt(1, value ->
                 !value.inProgress && value.success && value.errorMessage == null && !value.foodVenues.isEmpty());
